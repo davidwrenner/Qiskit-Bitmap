@@ -8,11 +8,11 @@ from qiskit import QuantumCircuit
 EXPECTED_ARG_COUNT = 2
 DPI = 250
 FONT_SIZE = 19
-FONT_FILE = 'Times.ttc'
+FONT_FILE = 'SourceSansPro-Bold.otf'
 OUTPUT_MODE = 'mpl'
-OUTPUT_FILE = 'qiskit_text.png'
+OUTPUT_FILE = 'output.png'
 MAX_TEXT_LENGTH = 200
-H_COLOR = '#33B1FF'
+H_COLOR = '#A51417'
 I_COLOR = '#F0F0F0'
 X_COLOR = '#F0F0F0'
 Y_COLOR = '#F0F0F0'
@@ -20,7 +20,7 @@ Z_COLOR = '#F0F0F0'
 
 
 def usage():
-    print(f'Usage: python {sys.argv[0]} <textstring>\n')
+    print(f'usage: {sys.argv[0]} text_string\n')
 
 
 def get_font():
@@ -41,6 +41,14 @@ def text_to_image(text):
     return image
 
 
+def get_offset(img, text):
+    r = 0
+    w, _ = get_text_size(text)
+    while all([img.getpixel((c, r)) for c in range(w)]):
+        r += 1
+    return r
+
+
 def append_random(qc, qubit):
     n = random.uniform(0, 1)
     if n < 0.25:
@@ -54,21 +62,22 @@ def append_random(qc, qubit):
     return qc
 
 
-def bit_to_gate(qc, img, c, r):
-    if img.getpixel((c,r)):
-        append_random(qc, r-2)
+def bit_to_gate(qc, img, r, c, offset):
+    if img.getpixel((c, r)):
+        append_random(qc, r-offset)
     else:
-        qc.h(r-2)
+        qc.h(r-offset)
     return qc
 
 
 def image_to_circuit(img, text):
     print('Generating circuit...')
     w, h = get_text_size(text)
-    qc = QuantumCircuit(h-2,1)
-    for r in range(2,h):
+    offset = get_offset(img, text)
+    qc = QuantumCircuit(h-offset)
+    for r in range(offset, h):
         for c in range(w):
-            qc = bit_to_gate(qc, img, c, r)
+            qc = bit_to_gate(qc, img, r, c, offset)
     return qc
 
 
@@ -78,8 +87,7 @@ def main():
         return
     text = sys.argv[1]
     if len(text) > MAX_TEXT_LENGTH:
-        print(f'Length of input exceeded max. \
-            Actual: {len(text)}, Expected: {MAX_TEXT_LENGTH}')
+        print(f'Length of input ({len(text)}) exceeded max ({MAX_TEXT_LENGTH})')
         return
     try:
         image = text_to_image(text)
