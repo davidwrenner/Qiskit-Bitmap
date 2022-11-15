@@ -1,11 +1,11 @@
-# Qiskit Bitmap
+# Qiskit Gate Art
 
 ![Example generated with input 'README.md'](example.png)
 
 ## Setup
 Clone
 ```
-git clone https://github.com/davidwrenner/Qiskit-Bitmap.git
+git clone https://github.com/davidwrenner/Qiskit-Gate-Art.git
 ```
 Install Requirements
 ```
