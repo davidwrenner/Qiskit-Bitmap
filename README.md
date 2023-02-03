@@ -7,12 +7,10 @@ Clone
 ```
 git clone https://github.com/davidwrenner/Qiskit-Gate-Art.git
 ```
-Create Virtual Environment
+(optional) Create & ActivateVirtual Environment
 ```
 virtualenv env
-```
-Activate Environment
-```
+
 source env/bin/activate
 ```
 Install Requirements
