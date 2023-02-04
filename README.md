@@ -19,6 +19,6 @@ pip install -r requirements.txt
 ```
 Usage
 ```
-./qiskit_bitmap.py text_string
+./generate.py text
 ```
 
